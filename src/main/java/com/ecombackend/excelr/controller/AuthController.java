@@ -31,6 +31,7 @@ public class AuthController {
         }
 
         signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        signUpRequest.setRole("User");
         userService.saveUser(signUpRequest);
 
         return ResponseEntity.ok("User registered successfully "
