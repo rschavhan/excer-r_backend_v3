@@ -31,13 +31,13 @@ public class AuthController {
         }
 
         signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        signUpRequest.setRole("User");
+        signUpRequest.setRole("ROLE_USER"); // Set role to uppercase
+
         userService.saveUser(signUpRequest);
 
-        return ResponseEntity.ok("User registered successfully "
-        +"|Email is :"+signUpRequest.getEmail()
-        		+" |PassWord is :"+ passwordEncoder.encode( signUpRequest.getPassword()));
+        return ResponseEntity.ok("User registered successfully with email: " + signUpRequest.getEmail());
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody LoginRequest loginRequest) {
         Optional<User> userOptional = userService.findByUsername(loginRequest.getEmail());
@@ -47,8 +47,6 @@ public class AuthController {
         }
 
         User user = userOptional.get();
-        return ResponseEntity.ok("Login successful for User |"+loginRequest.getEmail());
+        return ResponseEntity.ok("Login successful for Role: " + user.getRole() + " | Username: " + user.getUsername());
     }
-
-    
 }
