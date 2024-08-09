@@ -28,16 +28,17 @@ public class AppConfig {
                 .requestMatchers("/api/admin/**").hasRole("admin")
                 
                 // User management (admin only)
-                .requestMatchers("/api/users/**").hasRole("admin")
+                .requestMatchers("/api/users/**").permitAll()
                 
                 // User endpoints
-                .requestMatchers("/api/product/**").hasAnyRole("user", "admin")
+                .requestMatchers("/api/products/**").permitAll()
                 
                 // Public endpoints
                 .requestMatchers("/api/home/**").permitAll()
                 
                 // Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/cart/**").permitAll()
 
                 // Other requests
                 .anyRequest().authenticated()

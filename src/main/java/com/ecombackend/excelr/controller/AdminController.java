@@ -25,8 +25,9 @@ public class AdminController {
     private UserService userService;
 
     @GetMapping("/products")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public String getAllProducts() {
+    	List<Product> allProducts = productService.getAllProducts();
+        return "Returning :"+allProducts;
     }
 
     @DeleteMapping("/products/{id}")

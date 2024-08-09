@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecombackend.excelr.dto.ProductRequest;
 import com.ecombackend.excelr.model.Product;
 import com.ecombackend.excelr.repository.ProductRepository;
 
@@ -30,5 +31,14 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public Product addProduct(ProductRequest productRequest) {
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setImageUrl(productRequest.getImageUrl());
+        product.setPrice(productRequest.getPrice());
+        return productRepository.save(product);
     }
 }

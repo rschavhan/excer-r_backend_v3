@@ -5,7 +5,6 @@ package com.ecombackend.excelr.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecombackend.excelr.dto.ProductRequest;
 import com.ecombackend.excelr.model.Product;
 import com.ecombackend.excelr.service.ProductService;
 
@@ -37,26 +37,22 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-
-    @PreAuthorize("hasRole('admin')")
-    @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Product newProduct = productService.saveProduct(product);
-        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
-    } 
-    
-//    @PostMapping
-//    public Product createProduct(@RequestBody Product product) {
-//        return productService.saveProduct(product);
-//    }
+    @PostMapping("/add")
+    @PreAuthorize("hasAuthority( 'ROLE_ADMIN')")
+    public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest) {
+        Product product = productService.addProduct(productRequest);
+        return ResponseEntity.ok(product);
+    }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
         product.setId(id);
         return productService.saveProduct(product);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }

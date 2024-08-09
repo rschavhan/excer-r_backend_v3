@@ -1,6 +1,7 @@
 package com.ecombackend.excelr.controller;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecombackend.excelr.dto.LoginRequest;
+import com.ecombackend.excelr.model.Role;
 import com.ecombackend.excelr.model.User;
+import com.ecombackend.excelr.service.RoleService;
 import com.ecombackend.excelr.service.UserService;
 
 @RestController
@@ -20,6 +23,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -31,7 +37,15 @@ public class AuthController {
         }
 
         signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        signUpRequest.setRole("ROLE_USER"); // Set role to uppercase
+
+        // Fetch or create the "ROLE_USER" role
+        Role userRole = roleService.findByName("USER").orElseGet(() -> {
+            Role newRole = new Role();
+            newRole.setName("USER");
+            return roleService.saveRole(newRole);
+        });
+
+        signUpRequest.setRoles(Set.of(userRole));  // Assign the role to the user
 
         userService.saveUser(signUpRequest);
 
@@ -47,6 +61,8 @@ public class AuthController {
         }
 
         User user = userOptional.get();
-        return ResponseEntity.ok("Login successful for Role: " + user.getRole() + " | Username: " + user.getUsername());
+        Set<Role> roles = user.getRoles();  // Get the user's roles
+
+        return ResponseEntity.ok("Login successful for Roles: " + roles + " | Username: " + user.getUsername());
     }
 }
