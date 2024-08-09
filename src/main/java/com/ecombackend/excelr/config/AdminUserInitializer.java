@@ -1,5 +1,7 @@
 package com.ecombackend.excelr.config;
 
+import java.util.Set;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -9,7 +11,6 @@ import com.ecombackend.excelr.repository.RoleRepository;
 import com.ecombackend.excelr.repository.UserRepository;
 
 import jakarta.annotation.PostConstruct;
-import java.util.Set;
 
 @Configuration
 public class AdminUserInitializer {

@@ -9,4 +9,6 @@ import com.ecombackend.excelr.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+	boolean existsByName(String name);
 }

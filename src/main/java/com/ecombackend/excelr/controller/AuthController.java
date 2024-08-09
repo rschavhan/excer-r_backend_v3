@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecombackend.excelr.dto.LoginRequest;
+import com.ecombackend.excelr.dto.LoginResponse;
 import com.ecombackend.excelr.model.Role;
 import com.ecombackend.excelr.model.User;
 import com.ecombackend.excelr.service.RoleService;
 import com.ecombackend.excelr.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -62,7 +66,20 @@ public class AuthController {
 
         User user = userOptional.get();
         Set<Role> roles = user.getRoles();  // Get the user's roles
+        
+//        List<String> roles = user.getRoles().stream()
+//        		.map(Role::getName)
+//        		 .collect(Collectors.toList());
 
-        return ResponseEntity.ok("Login successful for Roles: " + roles + " | Username: " + user.getUsername());
+//        return ResponseEntity.ok("Login successful for Roles: " + roles + " | Username: " + user.getUsername());
+        LoginResponse loginResponse = new LoginResponse(user.getId(),roles);
+        return ResponseEntity.ok(loginResponse);
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().invalidate();
+        response.setStatus(HttpServletResponse.SC_OK);
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

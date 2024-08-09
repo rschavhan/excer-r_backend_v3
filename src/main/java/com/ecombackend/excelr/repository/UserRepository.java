@@ -1,9 +1,10 @@
 package com.ecombackend.excelr.repository;
 
-import com.ecombackend.excelr.model.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.ecombackend.excelr.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

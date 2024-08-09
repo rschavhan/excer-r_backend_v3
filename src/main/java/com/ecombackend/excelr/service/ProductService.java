@@ -34,6 +34,11 @@ public class ProductService {
     }
 
     public Product addProduct(ProductRequest productRequest) {
+    	 if (productRepository.existsByName(productRequest.getName())) {
+             throw new RuntimeException("Product with this name already exists.");
+         }
+    	
+    	
         Product product = new Product();
         product.setName(productRequest.getName());
         product.setDescription(productRequest.getDescription());

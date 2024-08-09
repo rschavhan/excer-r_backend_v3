@@ -5,6 +5,7 @@ package com.ecombackend.excelr.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,13 +38,26 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @PostMapping("/add")
-    @PreAuthorize("hasAuthority( 'ROLE_ADMIN')")
-    public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest) {
-        Product product = productService.addProduct(productRequest);
-        return ResponseEntity.ok(product);
-    }
+//    @PostMapping("/add")
+//    @PreAuthorize("hasAuthority( 'ROLE_ADMIN')")
+//    public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest) {
+//        Product product = productService.addProduct(productRequest);
+//        return ResponseEntity.ok(product);
+//    }
 
+    
+    @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest) {
+        try {
+            Product product = productService.addProduct(productRequest);
+            return ResponseEntity.ok(product);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    
+    
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {

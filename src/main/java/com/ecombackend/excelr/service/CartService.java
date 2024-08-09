@@ -12,6 +12,8 @@ import com.ecombackend.excelr.repository.CartRepository;
 import com.ecombackend.excelr.repository.ProductRepository;
 import com.ecombackend.excelr.repository.UserRepository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class CartService {
 
@@ -36,18 +38,66 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
+//    public Cart addProductToCart(Long userId, Long productId, int quantity) {
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        Cart cart = new Cart();
+//        cart.setProduct(product);
+//        cart.setQuantity(quantity);
+//        cart.setUser(user);  // Set the user for the cart item
+//
+//        return cartRepository.save(cart);
+//    }
+
     public Cart addProductToCart(Long userId, Long productId, int quantity) {
+        // Find the product and user
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Cart cart = new Cart();
-        cart.setProduct(product);
-        cart.setQuantity(quantity);
-        cart.setUser(user);  // Set the user for the cart item
+        // Check if the product is already in the user's cart
+        Cart existingCartItem = cartRepository.findByUserAndProduct(user, product);
 
-        return cartRepository.save(cart);
+        if (existingCartItem != null) {
+            // If the product already exists in the cart, update the quantity
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+            return cartRepository.save(existingCartItem);
+        } else {
+            // If the product does not exist in the cart, create a new cart item
+            Cart newCartItem = new Cart();
+            newCartItem.setProduct(product);
+            newCartItem.setQuantity(quantity);
+            newCartItem.setUser(user);  // Set the user for the cart item
+
+            return cartRepository.save(newCartItem);
+        }
     }
+
+    
+    
+    
+	public List<Cart> getCartItemsForUser(Long userId) {
+		
+		
+		return cartRepository.findByUserId(userId);
+	}
+
+	@Transactional
+    public Cart updateCartItemQuantity(Long id, int quantity) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        if (quantity < 1) {
+            throw new IllegalArgumentException("Quantity must be at least 1");
+        }
+
+        cart.setQuantity(quantity);
+        return cartRepository.save(cart);
+    }	
 }
