@@ -1,41 +1,69 @@
 package com.ecombackend.excelr.dto;
 
 public class ProductRequest {
-    private String name;
-    private String description;
-    private String imageUrl;
-    private double price;
+	   private String name;
+	    private double price;
+	    private String imgSrc;
+	    private String category;
+	    private String storage;
+	    private String color;
+	    private String brand;
 
-    // Getters and Setters
-    public String getName() {
-        return name;
-    }
+	    // Getters and Setters
+	    public String getName() {
+	        return name;
+	    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	    public void setName(String name) {
+	        this.name = name;
+	    }
 
-    public String getDescription() {
-        return description;
-    }
+	    public double getPrice() {
+	        return price;
+	    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	    public void setPrice(double price) {
+	        this.price = price;
+	    }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+	    public String getImgSrc() {
+	        return imgSrc;
+	    }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+	    public void setImgSrc(String imgSrc) {
+	        this.imgSrc = imgSrc;
+	    }
 
-    public double getPrice() {
-        return price;
-    }
+	    public String getCategory() {
+	        return category;
+	    }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-}
+	    public void setCategory(String category) {
+	        this.category = category;
+	    }
+
+	    public String getStorage() {
+	        return storage;
+	    }
+
+	    public void setStorage(String storage) {
+	        this.storage = storage;
+	    }
+
+	    public String getColor() {
+	        return color;
+	    }
+
+	    public void setColor(String color) {
+	        this.color = color;
+	    }
+
+	    public String getBrand() {
+	        return brand;
+	    }
+
+	    public void setBrand(String brand) {
+	        this.brand = brand;
+	    }
+	}
+

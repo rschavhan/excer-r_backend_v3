@@ -34,16 +34,19 @@ public class ProductService {
     }
 
     public Product addProduct(ProductRequest productRequest) {
-    	 if (productRepository.existsByName(productRequest.getName())) {
-             throw new RuntimeException("Product with this name already exists.");
-         }
-    	
-    	
+        if (productRepository.existsByName(productRequest.getName())) {
+            throw new RuntimeException("Product with this name already exists.");
+        }
+
         Product product = new Product();
         product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setImageUrl(productRequest.getImageUrl());
         product.setPrice(productRequest.getPrice());
+        product.setImgSrc(productRequest.getImgSrc());
+        product.setCategory(productRequest.getCategory());
+        product.setStorage(productRequest.getStorage());
+        product.setColor(productRequest.getColor());
+        product.setBrand(productRequest.getBrand());
+
         return productRepository.save(product);
     }
 }
