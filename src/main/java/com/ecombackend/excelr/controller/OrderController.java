@@ -3,6 +3,7 @@ package com.ecombackend.excelr.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecombackend.excelr.model.Order; // <-- Import your custom Order class
+import com.ecombackend.excelr.model.Order;
 import com.ecombackend.excelr.service.OrderService;
 
 @RestController
@@ -21,6 +23,8 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    // Admin APIs
 
     @GetMapping
     public List<Order> getAllOrders() {
@@ -32,14 +36,60 @@ public class OrderController {
         return orderService.saveOrder(order);
     }
 
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<Order> updateOrderStatus(
+        @PathVariable Long orderId,
+        @RequestParam String status
+    ) {
+        Order updatedOrder = orderService.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.noContent().build();
+    }
+    
     @PutMapping("/{id}")
     public Order updateOrder(@PathVariable Long id, @RequestBody Order order) {
         order.setId(id);
         return orderService.saveOrder(order);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public void deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
+    }
+
+    // User APIs
+
+    @GetMapping("/user/{userId}")
+    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
+    }
+
+    @PostMapping("/user/{userId}")
+    public Order createOrderForUser(@PathVariable Long userId, @RequestBody Order order) {
+        return orderService.saveOrderForUser(userId, order);
+    }
+
+    @PutMapping("/user/{userId}/{orderId}/status")
+    public ResponseEntity<Order> updateOrderStatusForUser(
+        @PathVariable Long userId,
+        @PathVariable Long orderId,
+        @RequestParam String status
+    ) {
+        Order updatedOrder = orderService.updateOrderStatusForUser(userId, orderId, status);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @DeleteMapping("/user/{userId}/{orderId}")
+    public ResponseEntity<Void> cancelOrderForUser(
+        @PathVariable Long userId,
+        @PathVariable Long orderId
+    ) {
+        orderService.cancelOrderForUser(userId, orderId);
+        return ResponseEntity.noContent().build();
     }
 }
