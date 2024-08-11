@@ -71,7 +71,6 @@ public class AuthController {
 //        		.map(Role::getName)
 //        		 .collect(Collectors.toList());
 
-//        return ResponseEntity.ok("Login successful for Roles: " + roles + " | Username: " + user.getUsername());
         LoginResponse loginResponse = new LoginResponse(user.getUsername(),user.getId(),roles);
         return ResponseEntity.ok(loginResponse);
     }

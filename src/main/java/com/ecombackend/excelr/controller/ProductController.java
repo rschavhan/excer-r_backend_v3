@@ -59,14 +59,13 @@ public class ProductController {
     
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
         product.setId(id);
         return productService.saveProduct(product);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }

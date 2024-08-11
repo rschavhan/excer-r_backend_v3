@@ -25,7 +25,8 @@ public class AppConfig {
             
             .authorizeHttpRequests(authorize -> authorize
                 // Admin endpoints
-                .requestMatchers("/api/admin/**").hasRole("admin")
+                .requestMatchers("/api/admin/**").permitAll()
+                .requestMatchers("/api/addresses/**").permitAll()
                 
                 // User management (admin only)
                 .requestMatchers("/api/users/**").permitAll()
