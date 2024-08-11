@@ -9,6 +9,7 @@ import com.ecombackend.excelr.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
-
+    Optional<User> findById(Long id); 
+    
     Optional<User> findByEmail(String email);
 }

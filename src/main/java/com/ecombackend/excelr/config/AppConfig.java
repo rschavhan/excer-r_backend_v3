@@ -27,7 +27,7 @@ public class AppConfig {
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").permitAll()
                 .requestMatchers("/api/addresses/**").permitAll()
-                
+                .requestMatchers("/api/orders/**").permitAll()
                 // User management (admin only)
                 .requestMatchers("/api/users/**").permitAll()
                 
