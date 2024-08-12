@@ -9,13 +9,19 @@ import org.springframework.stereotype.Service;
 
 import com.ecombackend.excelr.dto.ProductRequest;
 import com.ecombackend.excelr.model.Product;
+import com.ecombackend.excelr.repository.CartRepository;
 import com.ecombackend.excelr.repository.ProductRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    
+    @Autowired
+    private CartRepository cartRepository;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -29,8 +35,14 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public void deleteProduct(Long id) {
+    public void deleteProduct1(Long id) {
         productRepository.deleteById(id);
+    }
+    
+    @Transactional
+    public void deleteProduct(Long productId) {
+        cartRepository.deleteByProductId(productId); // Delete related cart items
+        productRepository.deleteById(productId); // Then delete the product
     }
 
     public Product addProduct(ProductRequest productRequest) {

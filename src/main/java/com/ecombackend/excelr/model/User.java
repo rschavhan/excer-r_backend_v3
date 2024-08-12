@@ -2,6 +2,7 @@ package com.ecombackend.excelr.model;
 
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -42,8 +43,8 @@ public class User {
     private Set<Role> roles;
     
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Address> addresses;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+       private Set<Address> addresses;
 
     // Getters and Setters
 }

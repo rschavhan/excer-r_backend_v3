@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ecombackend.excelr.model.Cart;
 import com.ecombackend.excelr.model.Product;
@@ -11,8 +12,6 @@ import com.ecombackend.excelr.model.User;
 import com.ecombackend.excelr.repository.CartRepository;
 import com.ecombackend.excelr.repository.ProductRepository;
 import com.ecombackend.excelr.repository.UserRepository;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
@@ -36,6 +35,14 @@ public class CartService {
 
     public void deleteCartItem(Long id) {
         cartRepository.deleteById(id);
+    }
+    
+
+
+    // Other methods...
+
+    public void clearCartForUser(Long userId) {
+        cartRepository.deleteByUserId(userId);
     }
 
 //    public Cart addProductToCart(Long userId, Long productId, int quantity) {
