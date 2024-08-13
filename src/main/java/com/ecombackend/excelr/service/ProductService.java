@@ -3,11 +3,14 @@ package com.ecombackend.excelr.service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecombackend.excelr.dto.ProductDTO;
 import com.ecombackend.excelr.dto.ProductRequest;
+import com.ecombackend.excelr.mapper.ProductMapper;
 import com.ecombackend.excelr.model.Product;
 import com.ecombackend.excelr.repository.CartRepository;
 import com.ecombackend.excelr.repository.ProductRepository;
@@ -22,10 +25,25 @@ public class ProductService {
     
     @Autowired
     private CartRepository cartRepository;
+    
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+
+    @Autowired
+    private ProductMapper productMapper;
+
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                       .map(productMapper::toDTO)
+                       .collect(Collectors.toList());
     }
+
+    
+
+
+//    public List<Product> getAllProducts() {
+//        return productRepository.findAll();
+//    }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
@@ -58,6 +76,7 @@ public class ProductService {
         product.setStorage(productRequest.getStorage());
         product.setColor(productRequest.getColor());
         product.setBrand(productRequest.getBrand());
+        product.setSize(productRequest.getSize());
 
         return productRepository.save(product);
     }

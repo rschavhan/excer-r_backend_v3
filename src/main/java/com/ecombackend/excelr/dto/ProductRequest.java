@@ -8,8 +8,19 @@ public class ProductRequest {
 	    private String storage;
 	    private String color;
 	    private String brand;
+	    private String size;
+	    
+	    
 
-	    // Getters and Setters
+	    public String getSize() {
+			return size;
+		}
+
+		public void setSize(String size) {
+			this.size = size;
+		}
+
+		// Getters and Setters
 	    public String getName() {
 	        return name;
 	    }
