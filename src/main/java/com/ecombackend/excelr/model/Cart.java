@@ -22,10 +22,13 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+//    @ManyToOne(cascade = CascadeType.REMOVE)
     @ManyToOne
     private User user;
-    @ManyToOne(cascade = CascadeType.REMOVE) // This will delete cart items when the product is deleted
-    @JoinColumn(name = "product_id")
+//    @ManyToOne(cascade = CascadeType.REMOVE) // This will delete cart items when the product is deleted
+    @ManyToOne
+    @JoinColumn(name = "product_id") 
     private Product product;
     private int quantity;
 }

@@ -58,20 +58,30 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> logInUser(@RequestBody LoginRequest loginRequest) {
-        Optional<User> userOptional = userService.findByUsername(loginRequest.getEmail());
+        Optional<User> userOptional = userService.findByEmail(loginRequest.getEmail());
 
+
+        if (userOptional.isEmpty()) {
+            System.out.println("User not found: " + loginRequest.getEmail());
+        } else {
+            System.out.println("User found: " + userOptional.get());
+            System.out.println("Password matches: " + passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword()));
+        }
+
+        
+        
         if (userOptional.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword())) {
+        	
             return ResponseEntity.badRequest().body("Invalid email or password");
         }
 
         User user = userOptional.get();
+        System.out.println("AuthController.logInUser()"
+        		+user);
         Set<Role> roles = user.getRoles();  // Get the user's roles
         
-//        List<String> roles = user.getRoles().stream()
-//        		.map(Role::getName)
-//        		 .collect(Collectors.toList());
-
         LoginResponse loginResponse = new LoginResponse(user.getUsername(),user.getId(),roles);
+        System.out.println("AuthController.logInUser()"+loginResponse);
         return ResponseEntity.ok(loginResponse);
     }
     

@@ -6,14 +6,21 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecombackend.excelr.dto.AddressDTO;
 import com.ecombackend.excelr.model.Address;
+import com.ecombackend.excelr.model.Order;
+import com.ecombackend.excelr.model.User;
 import com.ecombackend.excelr.repository.AddressRepository;
+import com.ecombackend.excelr.repository.OrderRepository;
 
 @Service
 public class AddressService {
 
     @Autowired
     private AddressRepository addressRepository;
+    
+    @Autowired
+    private OrderRepository orderRepository;
 
     public List<Address> getAddressesByUser(Long userId) {
         return addressRepository.findByUserId(userId);
@@ -47,4 +54,22 @@ public class AddressService {
             return false;
         }
     }
+    
+    public Address getAddressByOrderId(Long orderId) {
+        // Assuming your Order entity has an Address reference or can be used to find the Address
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        User user = order.getUser(); // Get the user from the order
+
+        // Assuming the address is associated with the user and you need to find the correct one
+        List<Address> addresses = addressRepository.findByUserId(user.getId());
+        
+        // Return the first address found for simplicity (you might need a more complex logic here)
+        if (addresses.isEmpty()) {
+            throw new RuntimeException("No address found for the user associated with the order");
+        }
+
+        return addresses.get(0); // Or implement logic to select the correct address
+    }
+
+    
 }

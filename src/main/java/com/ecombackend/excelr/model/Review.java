@@ -23,6 +23,11 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     // getters and setters
 }

@@ -1,8 +1,10 @@
 package com.ecombackend.excelr.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecombackend.excelr.dto.OrderDetailsDTO;
 import com.ecombackend.excelr.model.Order;
 import com.ecombackend.excelr.service.OrderService;
 
@@ -23,13 +26,25 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    
+
 
     // Admin APIs
-
+    
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orderService.getAllOrders();
+    public ResponseEntity<List<OrderDetailsDTO>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        List<OrderDetailsDTO> orderDetails = orders.stream()
+            .map(orderService::convertToDTO)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(orderDetails);
     }
+
+
+//    @GetMapping
+//    public List<Order> getAllOrders() {
+//        return orderService.getAllOrders();
+//    }
 
     @PostMapping
     public Order createOrder(@RequestBody Order order) {
@@ -64,14 +79,18 @@ public class OrderController {
 
     // User APIs
 
-    @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
-        return orderService.getOrdersByUserId(userId);
-    }
-
+//    @GetMapping("/user/{userId}")
+//    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+//        return orderService.getOrdersByUserId(userId);
+//    }
     @PostMapping("/user/{userId}")
-    public Order createOrderForUser(@PathVariable Long userId, @RequestBody Order order) {
-        return orderService.saveOrderForUser(userId, order);
+    public ResponseEntity<HttpStatus> createOrderForUser(@PathVariable Long userId, @RequestBody Order order) {
+        Order createdOrder = orderService.saveOrderForUser(userId, order);
+//        OrderDetailsDTO orderDTO = orderService.convertToDTO(createdOrder);
+        
+        
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/user/{userId}/{orderId}/status")
@@ -92,4 +111,14 @@ public class OrderController {
         orderService.cancelOrderForUser(userId, orderId);
         return ResponseEntity.noContent().build();
     }
+    
+    
+    @GetMapping("/user/{userId}/details")
+    public ResponseEntity<List<OrderDetailsDTO>> getOrdersByUserId(@PathVariable Long userId) {
+        List<OrderDetailsDTO> orderDetails = orderService.getOrderDetailsByUserId(userId);
+        return ResponseEntity.ok(orderDetails);
+    }
+
+    
+    
 }

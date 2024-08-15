@@ -1,5 +1,6 @@
 package com.ecombackend.excelr.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,13 @@ public class RoleService {
 
     public Role saveRole(Role role) {
         return roleRepository.save(role);
+    }
+
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    public Optional<Role> findById(Long id) {
+        return roleRepository.findById(id);
     }
 }

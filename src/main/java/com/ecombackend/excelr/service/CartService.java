@@ -1,11 +1,14 @@
 package com.ecombackend.excelr.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecombackend.excelr.dto.CartDTO;
+import com.ecombackend.excelr.dto.ProductDTO;
 import com.ecombackend.excelr.model.Cart;
 import com.ecombackend.excelr.model.Product;
 import com.ecombackend.excelr.model.User;
@@ -23,79 +26,38 @@ public class CartService {
     private ProductRepository productRepository;
 
     @Autowired
-    private UserRepository userRepository;  // Add this to access user information
+    private UserRepository userRepository;
 
-    public List<Cart> getAllCartItems() {
-        return cartRepository.findAll();
+    public List<CartDTO> getCartItemsForUser(Long userId) {
+        List<Cart> carts = cartRepository.findByUserId(userId);
+        return carts.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Cart saveCartItem(Cart cart) {
-        return cartRepository.save(cart);
-    }
-
-    public void deleteCartItem(Long id) {
-        cartRepository.deleteById(id);
-    }
-    
-
-
-    // Other methods...
-
-    public void clearCartForUser(Long userId) {
-        cartRepository.deleteByUserId(userId);
-    }
-
-//    public Cart addProductToCart(Long userId, Long productId, int quantity) {
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Cart cart = new Cart();
-//        cart.setProduct(product);
-//        cart.setQuantity(quantity);
-//        cart.setUser(user);  // Set the user for the cart item
-//
-//        return cartRepository.save(cart);
-//    }
-
-    public Cart addProductToCart(Long userId, Long productId, int quantity) {
-        // Find the product and user
+    public CartDTO addProductToCart(Long userId, Long productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Check if the product is already in the user's cart
-        Cart existingCartItem = cartRepository.findByUserAndProduct(user, product);
+        Cart cartItem = cartRepository.findByUserAndProduct(user, product);
 
-        if (existingCartItem != null) {
-            // If the product already exists in the cart, update the quantity
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-            return cartRepository.save(existingCartItem);
+        if (cartItem != null) {
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
-            // If the product does not exist in the cart, create a new cart item
-            Cart newCartItem = new Cart();
-            newCartItem.setProduct(product);
-            newCartItem.setQuantity(quantity);
-            newCartItem.setUser(user);  // Set the user for the cart item
-
-            return cartRepository.save(newCartItem);
+            cartItem = new Cart();
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+            cartItem.setUser(user);
         }
+
+        cartItem = cartRepository.save(cartItem);
+        return convertToDTO(cartItem);
     }
 
-    
-    
-    
-	public List<Cart> getCartItemsForUser(Long userId) {
-		
-		
-		return cartRepository.findByUserId(userId);
-	}
-
-	@Transactional
+    @Transactional
     public Cart updateCartItemQuantity(Long id, int quantity) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
@@ -107,4 +69,37 @@ public class CartService {
         cart.setQuantity(quantity);
         return cartRepository.save(cart);
     }	
+    
+    @Transactional
+    public void clearCartForUser(Long userId) {
+    	System.out.println("Clearing cart for user ID: " + userId);
+        cartRepository.deleteByUserId(userId);
+    }
+
+
+    @Transactional
+    public void deleteCartItem(Long id) {
+        cartRepository.deleteById(id);
+    }
+
+    private CartDTO convertToDTO(Cart cart) {
+        ProductDTO productDTO = ProductDTO.builder()
+                .id(cart.getProduct().getId())
+                .name(cart.getProduct().getName())
+                .price(cart.getProduct().getPrice())
+                .imgSrc(cart.getProduct().getImgSrc())
+                .category(cart.getProduct().getCategory())
+                .storage(cart.getProduct().getStorage())
+                .color(cart.getProduct().getColor())
+                .brand(cart.getProduct().getBrand())
+                .size(cart.getProduct().getSize())
+                .build();
+
+        return CartDTO.builder()
+                .id(cart.getId())
+                .product(productDTO)
+                .userId(cart.getUser().getId())
+                .quantity(cart.getQuantity())
+                .build();
+    }
 }

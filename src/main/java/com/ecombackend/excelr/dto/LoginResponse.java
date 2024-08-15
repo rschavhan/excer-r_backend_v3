@@ -9,17 +9,6 @@ public class LoginResponse {
     private Long userId;
     private Set<Role> roles;
 
-//    public LoginResponse(String userName, Long userId, Set<Role> roles) {
-//        this.userId = userId;
-//        this.userName = userName;
-//        this.roles = roles;
-//    }
-//
-    
-
-
-
-
 	public LoginResponse(String userName, Long userId, Set<Role> roles) {
 	super();
 	this.userName = userName;
