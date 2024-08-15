@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.ecombackend.excelr.dto.UserDTO;
 import com.ecombackend.excelr.model.Role;
 import com.ecombackend.excelr.model.User;
 
@@ -28,5 +29,9 @@ public interface UserService {
 
 
 	 Optional<User> findByEmail(String email);
+
+	 UserDTO getUserProfile(Long userId); 
+	 UserDTO updateUserProfile(Long userId, UserDTO userDTO);
+
 
 }

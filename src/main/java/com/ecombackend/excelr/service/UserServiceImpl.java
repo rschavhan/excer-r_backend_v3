@@ -5,11 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecombackend.excelr.dto.UserDTO;
 import com.ecombackend.excelr.model.User;
 import com.ecombackend.excelr.repository.UserRepository;
 
@@ -84,4 +83,39 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		 return userRepository.findByEmail(email);
 	}
+
+
+	public UserDTO getUserProfile(Long userId) {
+        // Find the user by ID from the repository
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+        // Convert the User entity to UserDTO to return only necessary fields
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(user.getUsername());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setMobileNumber(user.getMobileNumber());
+
+        return userDTO;
+    }
+	
+	@Override
+	@Transactional
+	public UserDTO updateUserProfile(Long userId, UserDTO userDTO) {
+	    User user = userRepository.findById(userId)
+	        .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+	    
+	    user.setUsername(userDTO.getUsername());
+	    user.setFirstName(userDTO.getFirstName());
+	    user.setLastName(userDTO.getLastName());
+	    user.setEmail(userDTO.getEmail());
+	    user.setMobileNumber(userDTO.getMobileNumber());
+	    
+	    userRepository.save(user);
+
+	    return new UserDTO(user); // Assuming UserDTO has a constructor that takes a User object
+	}
+
 }
