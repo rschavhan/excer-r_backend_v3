@@ -24,11 +24,14 @@ import com.ecombackend.excelr.model.Review;
 import com.ecombackend.excelr.repository.ProductRepository;
 import com.ecombackend.excelr.repository.ReviewRepository;
 import com.ecombackend.excelr.service.ProductService;
+import com.ecombackend.excelr.service.ReviewService;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
+	@Autowired
+	private ReviewService reviewService;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -42,37 +45,25 @@ public class ProductController {
     @Autowired
     private ProductMapper productMapper;
 
+
     @PostMapping("/{productId}/reviews")
     public ResponseEntity<ReviewDTO> addReview(@PathVariable Long productId, @RequestBody ReviewDTO reviewDTO) {
         try {
-            Product product = productService.getProductById(productId);
-            Review review = new Review();
-            review.setReviewerName(reviewDTO.getReviewerName());
-            review.setComment(reviewDTO.getComment());
-            review.setRating(reviewDTO.getRating());
-            review.setProduct(product);
-            Review savedReview = reviewRepository.save(review);
-
-            ReviewDTO responseDTO = new ReviewDTO();
-            responseDTO.setId(savedReview.getId());
-            responseDTO.setReviewerName(savedReview.getReviewerName());
-            responseDTO.setComment(savedReview.getComment());
-            responseDTO.setRating(savedReview.getRating());
-
-            return ResponseEntity.ok(responseDTO);
+            ReviewDTO createdReview = reviewService.addReview(productId, reviewDTO);
+            return ResponseEntity.ok(createdReview);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
     @GetMapping("/{productId}/reviews")
     public ResponseEntity<List<ReviewDTO>> getReviews(@PathVariable Long productId) {
         List<Review> reviews = reviewRepository.findByProductId(productId);
         List<ReviewDTO> reviewDTOs = reviews.stream()
-            .map(review -> new ReviewDTO(review.getId(), review.getReviewerName(), review.getComment(), review.getRating()))
+            .map(review -> new ReviewDTO(review.getId(), review.getReviewerName(), review.getComment(), review.getRating(), null)) // Set userId to null
             .collect(Collectors.toList());
         return ResponseEntity.ok(reviewDTOs);
     }
+
 
 //    @GetMapping
 //    public ResponseEntity<List<ProductDTO>> getAllProducts() {
