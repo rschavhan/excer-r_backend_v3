@@ -15,11 +15,19 @@ import com.ecombackend.excelr.model.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     
     List<Order> findByUserId(Long userId);
+//    @Modifying
+//    @Query("DELETE FROM Order o WHERE o.product.id = :productId")
+//    void deleteReferencesByProductId(@Param("productId") Long productId);
+
+
 
     Optional<Order> findByIdAndUserId(Long orderId, Long userId);
     List<Order> findAll();
     @Modifying
     @Query("DELETE FROM Order o WHERE o.user.id = :userId")
     void deleteByUserId(@Param("userId") Long userId);
+
+//	List<Order> findByProductId(Long productId);
+
 }
 

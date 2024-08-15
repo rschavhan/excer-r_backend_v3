@@ -13,6 +13,7 @@ import com.ecombackend.excelr.dto.ProductRequest;
 import com.ecombackend.excelr.mapper.ProductMapper;
 import com.ecombackend.excelr.model.Product;
 import com.ecombackend.excelr.repository.CartRepository;
+import com.ecombackend.excelr.repository.OrderRepository;
 import com.ecombackend.excelr.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,6 +27,8 @@ public class ProductService {
     @Autowired
     private CartRepository cartRepository;
     
+//    @Autowired
+    OrderRepository orderRepository;
 
 
     @Autowired
@@ -60,7 +63,10 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         cartRepository.deleteByProductId(productId); // Delete related cart items
-        productRepository.deleteById(productId); // Then delete the product
+
+        productRepository.disableForeignKeyChecks();
+        productRepository.deleteById(productId);
+        productRepository.enableForeignKeyChecks();
     }
 
     public Product addProduct(ProductRequest productRequest) {

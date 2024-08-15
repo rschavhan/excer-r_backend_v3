@@ -173,4 +173,13 @@ public class OrderService {
                         .build())
                 .collect(Collectors.toList());
     }
+    
+//    public void deleteOrdersByProductId(Long productId) {
+//        List<Order> orders = orderRepository.findByProductId(productId);
+//        for (Order order : orders) {
+//            // Remove the reference to the address
+//            order.setAddress(null);
+//            orderRepository.delete(order);
+//        }
+//    }
 }
