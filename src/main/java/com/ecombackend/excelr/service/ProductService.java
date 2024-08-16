@@ -64,9 +64,9 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         cartRepository.deleteByProductId(productId); // Delete related cart items
 
-        productRepository.disableForeignKeyChecks();
+//        productRepository.disableForeignKeyChecks();
         productRepository.deleteById(productId);
-        productRepository.enableForeignKeyChecks();
+//        productRepository.enableForeignKeyChecks();
     }
 
     public Product addProduct(ProductRequest productRequest) {

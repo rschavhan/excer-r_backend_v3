@@ -41,10 +41,6 @@ public class OrderController {
     }
 
 
-//    @GetMapping
-//    public List<Order> getAllOrders() {
-//        return orderService.getAllOrders();
-//    }
 
     @PostMapping
     public Order createOrder(@RequestBody Order order) {
@@ -71,11 +67,11 @@ public class OrderController {
         order.setId(id);
         return orderService.saveOrder(order);
     }
-
-    @DeleteMapping("/admin/{id}")
-    public void deleteOrder(@PathVariable Long id) {
-        orderService.deleteOrder(id);
-    }
+//
+//    @DeleteMapping("/admin/{id}")
+//    public void deleteOrder(@PathVariable Long id) {
+//        orderService.deleteOrder(id);
+//    }
 
     // User APIs
 

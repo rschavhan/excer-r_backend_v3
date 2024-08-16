@@ -21,38 +21,35 @@ import com.ecombackend.excelr.service.WishlistService;
 public class WishlistController {
 
 	@Autowired
-    private final WishlistService wishlistService;
+	private final WishlistService wishlistService;
 
-    
-    public WishlistController(WishlistService wishlistService) {
-        this.wishlistService = wishlistService;
-    }
-    
-    @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint() {
-        return ResponseEntity.ok("Test endpoint is working");
-    }
-       @GetMapping("/{userId}")
-    public ResponseEntity<List<WishlistDTO>> getWishlistByUser(@PathVariable Long userId) {
-        User user = new User();
-        user.setId(userId);
-        List<WishlistDTO> wishlist = wishlistService.getWishlistByUser(user);
-        return ResponseEntity.ok(wishlist);
-    }
+	public WishlistController(WishlistService wishlistService) {
+		this.wishlistService = wishlistService;
+	}
 
-    @PostMapping("/add")
-    public ResponseEntity<Void> addProductToWishlist(@RequestBody WishlistDTO wishlistDTO) {
-        wishlistService.addProductToWishlist(wishlistDTO);
-        return ResponseEntity.ok().build();
-    }
+	@GetMapping("/test")
+	public ResponseEntity<String> testEndpoint() {
+		return ResponseEntity.ok("Test endpoint is working");
+	}
 
-    @DeleteMapping("/{userId}/{productId}")
-    public ResponseEntity<Void> removeProductFromWishlist(
-            @PathVariable Long userId, 
-            @PathVariable Long productId) {
-        wishlistService.removeProductFromWishlist(userId, productId);
-        return ResponseEntity.ok().build();
-    }
-  
+	@GetMapping("/{userId}")
+	public ResponseEntity<List<WishlistDTO>> getWishlistByUser(@PathVariable Long userId) {
+		User user = new User();
+		user.setId(userId);
+		List<WishlistDTO> wishlist = wishlistService.getWishlistByUser(user);
+		return ResponseEntity.ok(wishlist);
+	}
+
+	@PostMapping("/add")
+	public ResponseEntity<Void> addProductToWishlist(@RequestBody WishlistDTO wishlistDTO) {
+		wishlistService.addProductToWishlist(wishlistDTO);
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{userId}/{productId}")
+	public ResponseEntity<Void> removeProductFromWishlist(@PathVariable Long userId, @PathVariable Long productId) {
+		wishlistService.removeProductFromWishlist(userId, productId);
+		return ResponseEntity.ok().build();
+	}
 
 }

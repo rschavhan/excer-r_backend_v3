@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,8 @@ public class OrderService {
     public Order updateOrderStatus(Long orderId, String status) {
         try {
             Order order = orderRepository.findById(orderId).get();
+            
+//            Hibernate.initialize(order.getAddress());//remove if not work
             order.setStatus(status);
             return orderRepository.save(order);
         } catch (NoSuchElementException e) {
