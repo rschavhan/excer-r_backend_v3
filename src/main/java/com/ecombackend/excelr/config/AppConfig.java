@@ -32,6 +32,7 @@ public class AppConfig {
                 // Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/cart/**").permitAll()
+                .requestMatchers("/api/wishlist/**").permitAll()
 
                 // Other requests
                 .anyRequest().permitAll()

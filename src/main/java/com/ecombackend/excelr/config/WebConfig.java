@@ -47,7 +47,7 @@ public class WebConfig implements WebMvcConfigurer {
 	            "http://localhost:4200",
 	            "femsha-shop-website.vercel.app"
 	        ));
-	        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS" , "PATCH"));
 	        configuration.setAllowedHeaders(Collections.singletonList("*"));
 	        configuration.setExposedHeaders(Arrays.asList("Authorization"));
 	        configuration.setAllowCredentials(true);
