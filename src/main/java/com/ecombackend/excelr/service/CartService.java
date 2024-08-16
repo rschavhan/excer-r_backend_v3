@@ -45,7 +45,7 @@ public class CartService {
         Cart cartItem = cartRepository.findByUserAndProduct(user, product);
 
         if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItem.setQuantity(cartItem.getQuantity()+1 );
         } else {
             cartItem = new Cart();
             cartItem.setProduct(product);
@@ -61,10 +61,6 @@ public class CartService {
     public Cart updateCartItemQuantity(Long id, int quantity) {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
-
-        if (quantity < 1) {
-            throw new IllegalArgumentException("Quantity must be at least 1");
-        }
 
         cart.setQuantity(quantity);
         return cartRepository.save(cart);
